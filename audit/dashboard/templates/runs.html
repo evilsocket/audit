@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Runs - Security Audit Dashboard{% endblock %}
+
+{% block content %}
+<h1>Runs</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Run ID</th>
+    <th>Status</th>
+    <th>Repo</th>
+    <th>Reachable Findings</th>
+    <th>Critical</th>
+    <th>High</th>
+    <th>Medium</th>
+    <th>Low</th>
+    <th>Informational</th>
+    <th>Cost</th>
+  </tr>
+</thead>
+  <tbody>
+    {% for run in runs %}
+    <tr>
+      <td><a href="/runs/{{ run.run_id }}">{{ run.run_id }}</a></td>
+      <td><span class="pill status-{{ run.status }}">{{ run.status }}</span></td>
+      <td class="mono small">{{ run.repo_path }}</td>
+      <td>{{ run.final_validated_finding_count }}</td>
+      <td><span class="pill sev-critical">{{ run.critical_count }}</span></td>
+      <td><span class="pill sev-high">{{ run.high_count }}</span></td>
+      <td><span class="pill sev-medium">{{ run.medium_count }}</span></td>
+      <td><span class="pill sev-low">{{ run.low_count }}</span></td>
+      <td><span class="pill sev-informational">{{ run.informational_count }}</span></td>
+      <td>${{ "%.4f"|format(run.total_cost_usd or 0) }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

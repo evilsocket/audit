@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Security Audit Dashboard{% endblock %}</title>
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <a class="brand" href="/">Security Audit Dashboard</a>
+    </div>
+    <nav>
+      <a href="/">Runs</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>

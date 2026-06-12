@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Tasks - {{ run.run_id }}{% endblock %}
+
+{% block content %}
+<h1>Tasks: {{ run.run_id }}</h1>
+
+<div class="navtabs">
+  <a href="/runs/{{ run.run_id }}">Overview</a>
+  <a href="/runs/{{ run.run_id }}/tasks">Tasks</a>
+  <a href="/runs/{{ run.run_id }}/findings">Findings</a>
+  <a href="/runs/{{ run.run_id }}/artifacts">Artifacts</a>
+  <a href="/runs/{{ run.run_id }}/report">Report</a>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Source</th>
+      <th>Attack class</th>
+      <th>Priority</th>
+      <th>Status</th>
+      <th>Target files</th>
+      <th>Rationale</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for task in tasks %}
+    <tr>
+      <td class="mono small">{{ task.task_id }}</td>
+      <td>{{ task.source }}</td>
+      <td>{{ task.attack_class }}</td>
+      <td>{{ task.priority }}</td>
+      <td><span class="pill status-{{ task.status }}">{{ task.status }}</span></td>
+      <td>
+        {% for f in task.target_files %}
+          <div class="mono small">{{ f }}</div>
+        {% endfor %}
+      </td>
+      <td class="small">{{ task.rationale }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

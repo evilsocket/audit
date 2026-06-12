@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Findings - {{ run.run_id }}{% endblock %}
+
+{% block content %}
+<h1>Findings: {{ run.run_id }}</h1>
+
+<div class="navtabs">
+  <a href="/runs/{{ run.run_id }}">Overview</a>
+  <a href="/runs/{{ run.run_id }}/tasks">Tasks</a>
+  <a href="/runs/{{ run.run_id }}/findings">Findings</a>
+  <a href="/runs/{{ run.run_id }}/artifacts">Artifacts</a>
+  <a href="/runs/{{ run.run_id }}/report">Report</a>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Finding</th>
+      <th>Severity</th>
+      <th>Class</th>
+      <th>Location</th>
+      <th>Validation</th>
+      <th>Canonical</th>
+      <th>Reachable</th>
+      <th>Confidence</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for f in findings %}
+    <tr>
+      <td class="mono small">{{ f.finding_id }}</td>
+      <td><span class="pill sev-{{ f.severity }}">{{ f.severity }}</span></td>
+      <td>{{ f.vuln_class }}</td>
+      <td class="mono small">{{ f.file }}:{{ f.line_start }}-{{ f.line_end }}</td>
+      <td>{{ f.validation_status or "unvalidated" }}</td>
+      <td>{{ "yes" if f.is_canonical else "no" }}</td>
+      <td>{{ "yes" if f.reachable else "no" }}</td>
+      <td>{{ f.confidence }}</td>
+    </tr>
+    <tr>
+      <td colspan="8" class="finding-description">
+        {{ f.description }}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
