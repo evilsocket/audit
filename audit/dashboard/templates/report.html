@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Report - {{ run.run_id }}{% endblock %}
+
+{% block content %}
+<h1>Report: {{ run.run_id }}</h1>
+
+<div class="navtabs">
+  <a href="/runs/{{ run.run_id }}">Overview</a>
+  <a href="/runs/{{ run.run_id }}/tasks">Tasks</a>
+  <a href="/runs/{{ run.run_id }}/findings">Findings</a>
+  <a href="/runs/{{ run.run_id }}/artifacts">Artifacts</a>
+  <a href="/runs/{{ run.run_id }}/report">Report</a>
+</div>
+
+<p class="mono small">{{ report_path }}</p>
+
+{% if report %}
+  <h2>Summary</h2>
+  <pre>{{ report.summary | tojson(indent=2) }}</pre>
+
+  <h2>Findings</h2>
+  {% for f in report.findings %}
+    <section class="finding-card">
+      <h3>{{ f.title }}</h3>
+      <p>
+        <span class="pill sev-{{ f.severity }}">{{ f.severity }}</span>
+        <span class="pill">{{ f.vuln_class }}</span>
+        {% if f.cwe %}<span class="pill">{{ f.cwe }}</span>{% endif %}
+      </p>
+      <p class="mono small">{{ f.file }}:{{ f.line_start }}-{{ f.line_end }}</p>
+      <p>{{ f.description }}</p>
+
+      <h4>Evidence</h4>
+      <pre>{{ f.evidence }}</pre>
+
+      <h4>Recommendation</h4>
+      <p>{{ f.recommendation }}</p>
+
+      <h4>Trace</h4>
+      <pre>{{ f.trace | tojson(indent=2) }}</pre>
+    </section>
+  {% endfor %}
+{% else %}
+  <p>No report found yet.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Artifacts - {{ run.run_id }}{% endblock %}
+
+{% block content %}
+<h1>Artifacts: {{ run.run_id }}</h1>
+
+<div class="navtabs">
+  <a href="/runs/{{ run.run_id }}">Overview</a>
+  <a href="/runs/{{ run.run_id }}/tasks">Tasks</a>
+  <a href="/runs/{{ run.run_id }}/findings">Findings</a>
+  <a href="/runs/{{ run.run_id }}/artifacts">Artifacts</a>
+  <a href="/runs/{{ run.run_id }}/report">Report</a>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Stage</th>
+      <th>Ref</th>
+      <th>Kind</th>
+      <th>Path</th>
+      <th>Open</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for a in artifacts %}
+    <tr>
+      <td>{{ a.stage }}</td>
+      <td class="mono small">{{ a.ref_id or "" }}</td>
+      <td>{{ a.kind }}</td>
+      <td class="mono small">{{ a.path }}</td>
+      <td>
+        {% if a.kind == "jsonl" %}
+          <a href="/artifacts/raw?path={{ a.path }}">raw</a>
+        {% else %}
+          -
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

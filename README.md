@@ -77,6 +77,53 @@ login — it does **not** call the metered Anthropic API. The on-disk auth
 module scrubs `ANTHROPIC_API_KEY` from the environment so it can't
 silently route around the OAuth flow.
 
+## Local dashboard
+
+`audit` can launch a local read-only dashboard for browsing historical runs,
+tasks, findings, costs, artifacts, and final reports.
+
+Install the optional dashboard dependencies:
+
+```bash
+pip install -e ".[dashboard]"
+```
+
+If you also want the test dependencies:
+
+```bash
+pip install -e ".[dev,dashboard]"
+```
+
+Start the dashboard:
+
+```bash
+audit dashboard
+```
+
+Or, if your shell has another command named `audit`, run the module directly:
+
+```bash
+python -m audit.cli dashboard
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8765
+```
+
+The dashboard reads the existing local `state.db`, `results/`, and `work/`
+directories. It does not start new scans yet and does not modify run state.
+
+### Dashboard safety
+
+The dashboard is intended for local use and binds to `127.0.0.1` by default.
+
+Scan artifacts can contain source snippets, prompts, tool outputs, file paths,
+and any sensitive data the agent read during the scan. Do not expose the
+dashboard on an untrusted network unless you have added your own access
+controls and artifact redaction.
+
 ## Using a different model / provider
 
 The auth module picks one of three modes, in this order:
@@ -113,6 +160,7 @@ audit run --repo /path/to/target --run-id orun --max-cost-usd 30
 ```
 
 Caveats:
+
 - Per-stage model overrides in `config/stages.yaml` are model **names**
   (e.g. `claude-opus-4-7`); OpenRouter accepts slash-prefixed forms like
   `anthropic/claude-opus-4-7`. Edit the YAML if you want different
@@ -172,6 +220,7 @@ audit run --repo /path/to/target --run-id live \
 ```
 
 Rules the agents follow when `--target-url` is set:
+
 - Network egress is restricted to that host + `127.0.0.1`. No other external
   hosts.
 - A finding that doesn't reproduce against the live target is dropped or
@@ -227,6 +276,7 @@ audit/          Python package
   runner.py     claude-agent-sdk wrapper with schema validation + repair turn
   orchestrator.py pipeline driver
   stages/       one module per stage
+  dashboard/    optional local web dashboard
 work/           per-Hunt-task scratch dirs (sandbox for PoC compile/run)
 results/        JSONL artifacts per stage + final report.json
 state.db        SQLite (gitignored)
@@ -242,6 +292,10 @@ scripts could otherwise execute on your host during PoC compilation.
 The agent reads everything you `--add-dir`, including any `.env` or
 `secrets/` directories in the target. Outputs land in `results/<run-id>/`
 which is `.gitignore`d but **not** scrubbed of those reads.
+
+The dashboard is also local-first and read-only, but it can display the same
+sensitive artifacts. Keep it bound to `127.0.0.1` unless you have added
+access controls and artifact redaction.
 
 ## License
 

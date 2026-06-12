@@ -308,6 +308,29 @@ def _render_markdown_report(report: dict) -> str:
         lines.append("")
     return "\n".join(lines)
 
+@main.command("dashboard")
+@click.option("--host", default="127.0.0.1", show_default=True)
+@click.option("--port", default=8765, show_default=True, type=int)
+def dashboard(host: str, port: int) -> None:
+    """Launch the local web dashboard."""
+    try:
+        import fastapi  
+        import jinja2  
+        import uvicorn
+    except ImportError:
+        console.print(
+            "[red]dashboard dependencies are not installed.[/red]\n"
+            "Install them with: [bold]pip install -e '.[dashboard]'[/bold]"
+        )
+        sys.exit(2)
+
+    console.print(f"[green]dashboard[/green] http://{host}:{port}")
+    uvicorn.run(
+        "audit.dashboard.app:app",
+        host=host,
+        port=port,
+        reload=False,
+    )
 
 if __name__ == "__main__":
     main()

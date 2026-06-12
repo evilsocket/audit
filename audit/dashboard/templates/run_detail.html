@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}{{ run.run_id }} - Security Vulnerability  Dashboard{% endblock %}
+
+{% block content %}
+<h1>{{ run.run_id }}</h1>
+
+<div class="navtabs">
+  <a href="/runs/{{ run.run_id }}">Overview</a>
+  <a href="/runs/{{ run.run_id }}/tasks">Tasks</a>
+  <a href="/runs/{{ run.run_id }}/findings">Findings</a>
+  <a href="/runs/{{ run.run_id }}/artifacts">Artifacts</a>
+  <a href="/runs/{{ run.run_id }}/report">Report</a>
+</div>
+
+<section class="cards">
+  <div class="card status-card status-card-{{ run.status }}">
+  <div class="label">Status</div>
+  <div class="value">
+    <span class="status-badge status-{{ run.status }}">
+      <span class="status-dot"></span>
+      {{ run.status }}
+    </span>
+  </div>
+  <div class="status-bar status-bar-{{ run.status }}">
+    <span></span>
+  </div>
+</div>
+  <div class="card">
+    <div class="label">Cost</div>
+    <div class="value">${{ "%.4f"|format(run.total_cost_usd or 0) }}</div>
+  </div>
+  <div class="card">
+    <div class="label">Raw findings</div>
+    <div class="value">{{ metrics.findings.raw }}</div>
+  </div>
+  <div class="card">
+    <div class="label">Reachable findings</div>
+    <div class="value">{{ metrics.findings.reachable }}</div>
+  </div>
+</section>
+
+<h2>Repository</h2>
+<p class="mono">{{ run.repo_path }}</p>
+
+<h2>Hunt task status</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for status, count in metrics.tasks.items() %}
+    <tr>
+      <td>
+        <span class="status-badge status-{{ status }}">
+          <span class="status-dot"></span>
+          {{ status }}
+        </span>
+      </td>
+      <td>{{ count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Agent usage by stage</h2>
+
+<table id="agent-usage-table" class="sortable-table">
+  <thead>
+    <tr>
+      <th>Stage</th>
+      <th>Model</th>
+      <th>
+        <button class="sort-button" data-sort-key="calls" data-sort-type="number">
+          Agent invocations <span class="sort-indicator"></span>
+        </button>
+      </th>
+      <th>
+        <button class="sort-button" data-sort-key="cost" data-sort-type="number">
+          Cost <span class="sort-indicator"></span>
+        </button>
+      </th>
+      <th>
+        <button class="sort-button" data-sort-key="inputTokens" data-sort-type="number">
+          Input tokens <span class="sort-indicator"></span>
+        </button>
+      </th>
+      <th>
+        <button class="sort-button" data-sort-key="outputTokens" data-sort-type="number">
+          Output tokens <span class="sort-indicator"></span>
+        </button>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in metrics.costs %}
+    <tr
+      data-stage-order="{{ row.stage_order }}"
+      data-calls="{{ row.calls }}"
+      data-cost="{{ row.cost_usd or 0 }}"
+      data-input-tokens="{{ row.input_tokens or 0 }}"
+      data-output-tokens="{{ row.output_tokens or 0 }}"
+    >
+      <td><span class="pill">{{ row.stage }}</span></td>
+      <td><span class="model-pill mono small">{{ row.model or "unknown" }}</span></td>
+      <td>{{ row.calls }}</td>
+      <td>${{ "%.4f"|format(row.cost_usd or 0) }}</td>
+      <td>{{ row.input_tokens }}</td>
+      <td>{{ row.output_tokens }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

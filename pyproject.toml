@@ -25,6 +25,12 @@ dev = [
     "pytest-asyncio>=0.23",
 ]
 
+dashboard = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "jinja2>=3.1",
+]
+
 [project.scripts]
 audit = "audit.cli:main"
 

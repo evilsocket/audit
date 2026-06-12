@@ -1,0 +1,351 @@
+:root {
+  --bg: #0f172a;
+  --panel: #111827;
+  --panel2: #1f2937;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --line: #374151;
+  --accent: #60a5fa;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 28px;
+  background: #020617;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+}
+
+nav a,
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.container {
+  padding: 28px;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  margin-bottom: 28px;
+}
+
+th, td {
+  border-bottom: 1px solid var(--line);
+  padding: 10px;
+  vertical-align: top;
+  text-align: left;
+}
+
+th {
+  color: white;
+  background: var(--panel2);
+}
+
+pre {
+  background: #020617;
+  border: 1px solid var(--line);
+  padding: 12px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.small {
+  font-size: 12px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 18px;
+  border-radius: 12px;
+}
+
+.label {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.value {
+  font-size: 26px;
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.sev-critical { background: #7f1d1d; }
+.sev-high { background: #991b1b; }
+.sev-medium { background: #92400e; }
+.sev-low { background: #1e3a8a; }
+.sev-informational { background: #374151; }
+
+.status-completed,
+.status-done {
+  background: #14532d;
+}
+
+.status-running,
+.status-pending {
+  background: #1e3a8a;
+}
+
+.status-failed,
+.status-aborted {
+  background: #7f1d1d;
+}
+
+.navtabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.navtabs a {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.finding-description {
+  color: var(--muted);
+  background: #030712;
+}
+
+.finding-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+/* Status badges and bars */
+
+.status-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.status-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--line);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.status-bar {
+  height: 6px;
+  margin-top: 14px;
+  border-radius: 999px;
+  background: #020617;
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.status-bar span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+}
+
+/* Successful states */
+.status-completed,
+.status-done {
+  color: #bbf7d0;
+  background: rgba(22, 101, 52, 0.45);
+  border-color: rgba(34, 197, 94, 0.55);
+}
+
+.status-card-completed::before,
+.status-card-done::before,
+.status-bar-completed span,
+.status-bar-done span {
+  background: #22c55e;
+}
+
+/* Failed states */
+.status-failed,
+.status-aborted,
+.status-error {
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.55);
+  border-color: rgba(248, 113, 113, 0.65);
+}
+
+.status-card-failed::before,
+.status-card-aborted::before,
+.status-card-error::before,
+.status-bar-failed span,
+.status-bar-aborted span,
+.status-bar-error span {
+  background: #ef4444;
+}
+
+/* Running states */
+.status-running,
+.status-in-progress,
+.status-in_progress {
+  color: #bfdbfe;
+  background: rgba(30, 64, 175, 0.45);
+  border-color: rgba(96, 165, 250, 0.65);
+}
+
+.status-card-running::before,
+.status-card-in-progress::before,
+.status-card-in_progress::before,
+.status-bar-running span,
+.status-bar-in-progress span,
+.status-bar-in_progress span {
+  background: #3b82f6;
+}
+
+/* Pending states */
+.status-pending,
+.status-queued {
+  color: #fef3c7;
+  background: rgba(146, 64, 14, 0.45);
+  border-color: rgba(251, 191, 36, 0.65);
+}
+
+.status-card-pending::before,
+.status-card-queued::before,
+.status-bar-pending span,
+.status-bar-queued span {
+  background: #f59e0b;
+}
+
+/* Skipped / neutral states */
+.status-skipped,
+.status-neutral,
+.status-unknown {
+  color: #e5e7eb;
+  background: rgba(55, 65, 81, 0.6);
+  border-color: rgba(156, 163, 175, 0.55);
+}
+
+.status-card-skipped::before,
+.status-card-neutral::before,
+.status-card-unknown::before,
+.status-bar-skipped span,
+.status-bar-neutral span,
+.status-bar-unknown span {
+  background: #9ca3af;
+}
+
+.model-chip {
+  display: inline-block;
+  margin: 2px 4px 2px 0;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(96, 165, 250, 0.45);
+  background: rgba(30, 64, 175, 0.35);
+  color: #bfdbfe;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sort-button:hover,
+.sort-button:focus {
+  color: var(--accent);
+  outline: none;
+}
+
+.sort-indicator {
+  display: inline-block;
+  width: 12px;
+  color: var(--accent);
+  font-size: 10px;
+}
+
+.sort-button.sort-asc,
+.sort-button.sort-desc {
+  color: var(--accent);
+}
+
+.model-pill {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #020617;
+  color: #cbd5e1;
+  white-space: nowrap;
+}
