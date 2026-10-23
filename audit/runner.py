@@ -60,6 +60,11 @@ class AgentRunError(RuntimeError):
     parseable output that didn't match the schema)."""
 
 
+class PromptTooLongError(AgentRunError):
+    """The input exceeded the model's context window. Retrying the same
+    input can't succeed — the caller must send less."""
+
+
 class TransientAgentError(RuntimeError):
     """API returned a transient error (529 Overloaded, generic 5xx).
     The agent call should be retried with backoff."""
@@ -81,6 +86,10 @@ _QUOTA_MARKERS = (
     "your plan has no remaining",
 )
 
+_PROMPT_TOO_LONG_MARKERS = (
+    "prompt is too long",
+)
+
 _TRANSIENT_MARKERS = (
     "api error: 529",
     "overloaded",
@@ -99,6 +108,8 @@ def _classify_api_error(text: str) -> tuple[str, type[RuntimeError]]:
     t = (text or "").lower()
     if any(m in t for m in _QUOTA_MARKERS):
         return "quota_exhausted", QuotaExhaustedError
+    if any(m in t for m in _PROMPT_TOO_LONG_MARKERS):
+        return "prompt_too_long", PromptTooLongError
     if any(m in t for m in _TRANSIENT_MARKERS):
         return "transient", TransientAgentError
     # Default to transient — better to retry once than abort on classification miss.

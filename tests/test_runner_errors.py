@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 from audit.runner import (
+    PromptTooLongError,
     QuotaExhaustedError,
     TransientAgentError,
     _classify_api_error,
@@ -50,3 +51,10 @@ def test_empty_defaults_to_transient() -> None:
     label, exc = _classify_api_error("")
     assert label == "unknown_api_error"
     assert exc is TransientAgentError
+
+
+def test_prompt_too_long_not_retried() -> None:
+    label, exc = _classify_api_error("Prompt is too long")
+    assert label == "prompt_too_long"
+    assert exc is PromptTooLongError
+    assert not issubclass(exc, TransientAgentError)
